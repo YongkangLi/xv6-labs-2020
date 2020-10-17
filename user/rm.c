@@ -13,8 +13,8 @@ main(int argc, char *argv[])
   }
 
   for(i = 1; i < argc; i++){
-    if(unlink(argv[i]) < 0){
-      fprintf(2, "rm: %s failed to delete\n", argv[i]);
+    if(unlink(argv[i]) < 0){                            // call the unlink function to remove the specified file
+      fprintf(2, "rm: %s failed to delete\n", argv[i]); // unlink returning a negative value means error occurring during removing
       break;
     }
   }
