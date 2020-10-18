@@ -95,3 +95,36 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_trace(void)
+{
+  int mask;
+
+  if(argint(0, &mask) < 0)
+    return -1;
+
+  myproc()->trace_mask = mask;
+  return 0;
+}
+
+uint64
+sys_sysinfo(void)
+{
+  struct sysinfo *info;
+  struct proc *p = myproc();
+
+  if(argaddr(0, (uint64 *)&info))
+    return -1;
+
+  uint64 frmem = freemem();
+  uint64 numproc = nproc();
+
+  if(copyout(p->pagetable, (uint64)info, (char *)&frmem, sizeof(frmem)) < 0)
+      return -1;
+  if(copyout(p->pagetable, ((uint64)info)+8, (char *)&numproc, sizeof(numproc)) < 0)
+      return -1;
+
+  return 0;
+
+}
